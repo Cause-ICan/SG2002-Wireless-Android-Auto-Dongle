@@ -1,0 +1,41 @@
+# Lines added to buildroot/configs/cvitek_SG200X_musl_riscv64_defconfig
+
+# AAWG + its custom dbus-cxx build
+BR2_PACKAGE_AAWG=y
+BR2_PACKAGE_DBUS_CXX_CUSTOM=y
+
+# MTP responder - needed for some head units to trigger the accessory-mode handshake
+BR2_PACKAGE_UMTPRD=y
+
+# Force-fix init script permissions on every build
+BR2_ROOTFS_POST_BUILD_SCRIPT="board/cvitek/SG200X/fix-permissions.sh"
+
+# Point at both overlays (stock Sipeed + this project's own rootfs files)
+BR2_ROOTFS_OVERLAY="$(TOPDIR)/board/cvitek/SG200X/overlay /build/aawg-rootfs-overlay"
+
+# Size cleanup - none of this is needed on a headless dongle
+# BR2_PACKAGE_QT5 is not set
+# BR2_PACKAGE_OPENCV4 is not set
+# BR2_PACKAGE_PYTHON3 is not set
+
+# Naming (hostname can't contain spaces or it silently won't apply)
+BR2_TARGET_GENERIC_HOSTNAME="aa-dongle"
+BR2_TARGET_GENERIC_ISSUE="AA Dongle"
+
+
+# ---
+# Also needed: disable two stock Sipeed scripts that conflict with AAWG
+# owning wifi/usb duty on this project. From the buildroot repo root:
+#
+#   chmod -x buildroot/board/cvitek/SG200X/overlay/etc/init.d/S30wifi
+#
+# (Do NOT disable S08usbdev - it also sets the core USB PHY mode. The g0
+# conflict it causes is handled instead by the S92usb_gadget fix in this
+# same folder.)
+
+
+# ---
+# aawgd.conf changes (in the rootfs overlay, /etc/aawgd.conf):
+#
+#   AAWG_WIFI_PASSWORD=YourChosenPassword      (uncomment + set a real value)
+#   AAWG_UNIQUE_NAME_SUFFIX=YourSuffix          (uncomment + set something short)
