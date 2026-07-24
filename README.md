@@ -26,14 +26,19 @@ cd LicheeRV-Nano-Build
 git clone https://github.com/sophgo/host-tools --depth=1
 
 cd host/ubuntu
-docker build -t licheervnano-build-ubuntu .
+sudo docker build -t licheervnano-build-ubuntu .
 cd ../..
 ```
 
-## 2. Get into the build container
+## 2. Get into the build container (Change YOURUSERNAME)
 
 ```bash
-docker run -it -v $(pwd):/build licheervnano-build-ubuntu bash
+docker run -it -v /home/YOURUSERNAME/LicheeRV-Nano-Build:/build licheervnano-build-ubuntu bash
+```
+or..
+
+```bash
+docker run -it -v ~/LicheeRV-Nano-Build:/build licheervnano-build-ubuntu bash
 ```
 
 ## 3. Build the stock image first
@@ -51,7 +56,7 @@ The default login/ password is: root
 
 ## 4. Apply the kernel patch
 
-This adds USB accessory-mode support, which the SG2002 kernel doesn't include by default.
+This adds USB accessory/ device mode support, which the SG2002 kernel doesn't include by default.
 
 Copy the new driver files into place:
 ```bash
@@ -183,17 +188,3 @@ Pair your phone to the dongle over Bluetooth like any other device, then plug th
 - Sometimes takes a while to connect, or has a small hiccup around a minute after boot. Haven't tracked down if it's wifi channel interference or something settling on the chip itself.
 - The SD card partition size is still whatever Sipeed originally set it to, bigger than it needs to be now that the image is smaller after stripping unused packages. Works fine, just wastes some space.
 - If you kill the daemon abruptly it can leave some Bluetooth state behind that causes a hiccup on the next start. Not a real problem in normal use.
-
-## What's actually in `patches/`
-
-```
-kernel/
-  sg2002-f_accessory-modified-files.patch   the kernel patch itself
-  new-files/                                the new driver + header files it needs
-rootfs-changes/
-  S92usb_gadget          USB gadget setup, with the fix for the g0 conflict
-  interfaces             network config, with the hostapd argument order fixed
-  dnsmasq.conf           with bind-interfaces added so it doesn't fight for the DHCP port
-  fix-permissions.sh     post-build script that keeps init scripts executable
-  defconfig-additions.txt   every config line change, all in one place
-```
