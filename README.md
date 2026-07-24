@@ -1,4 +1,4 @@
-# SG2002---Wireless-Android-Auto-Dongle
+# SG2002-Wireless-Android-Auto-Dongle
 My port of [WirelessAndroidAutoDongle](https://github.com/nisargjhaveri/WirelessAndroidAutoDongle) (AAWG) to the Sophgo SG2002, running on a Sipeed LicheeRV Nano Wireless board. AAWG was originally built for Raspberry Pi, so this is every change needed to get it running on a different chip (RISC-V), different C library (musl instead of glibc), and a different vendor SDK (Sipeed's `LicheeRV-Nano-Build`).
 
 **Status:** fully working as of July 2026. Phone pairs over Bluetooth, hands off to WiFi, dongle shows as a USB accessory to the head unit, Android Auto shows up on screen and connects, amazing!
